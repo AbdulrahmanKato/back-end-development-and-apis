@@ -1,3 +1,4 @@
+
 import express from "express";
 import cors from "cors";
 
@@ -12,6 +13,29 @@ app.get("/", (_req, res) => {
 });
 
 // Do not change code above this line
+
+const timestampHandler = (req, res) => {
+  const input = req.params.date;
+
+  const date =
+    input === undefined
+      ? new Date()
+      : /^\d+$/.test(input)
+        ? new Date(Number(input))
+        : new Date(input);
+
+  if (isNaN(date.getTime())) {
+    return res.json({ error: "Invalid Date" });
+  }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
+};
+
+app.get("/api", timestampHandler);
+app.get("/api/:date", timestampHandler);
 
 // Do not change code below this line
 
